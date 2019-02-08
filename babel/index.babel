@@ -1,0 +1,179 @@
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      break_length : 5,
+      session_length : 25,
+      session_state : "Session",
+      time_left : "25:00",
+      time : "test",
+      secs : 0,
+      mins : 0
+    };
+    this.url = "http://soundbible.com/mp3/sos-morse-code_daniel-simion.mp3";
+    this.audio = new Audio(this.url);
+    this.startTimerSession = this.startTimerSession.bind(this);
+    this.startTimerBreak = this.startTimerBreak.bind(this);
+    this.pauseTimer = this.pauseTimer.bind(this);
+    this.resetTimer = this.resetTimer.bind(this);
+    this.add = this.add.bind(this);
+    this.breakIncrement = this.breakIncrement.bind(this);
+    this.breakDecrement = this.breakDecrement.bind(this);
+    this.sessionIncrement = this.sessionIncrement.bind(this);
+    this.sessionDecrement = this.sessionDecrement.bind(this);
+  }
+  startTimerSession(){
+    if (this.state.mins == 0){
+      this.setState({
+        mins : this.state.session_length,
+        time : setInterval(() => {
+          if (this.state.time_left=="0:0"){
+            clearInterval(this.state.time);
+            this.setState({
+              session_state : "Break",
+              time_left : (this.state.break_length).toString()+":00",
+              time : "test",
+              secs : 0,
+              mins : 0
+            })
+            this.audio.play();
+            this.startTimerBreak();
+          }
+          this.add();
+        }, 1000)
+      })
+    }
+    else{
+      this.setState({
+        time : setInterval(this.add, 1000)
+      })
+    }
+  }
+  startTimerBreak(){
+    if (this.state.mins == 0){
+      this.setState({
+        mins : this.state.break_length,
+        time : setInterval(() => {
+          if (this.state.time_left=="0:0"){
+            this.audio.play();
+            clearInterval(this.state.time);
+            this.setState({
+              session_state : "Session",
+              time_left : (this.state.session_length).toString()+":00",
+              time : "test",
+              secs : 0,
+              mins : 0
+            })
+            this.audio.play();
+            this.startTimerSession();
+          }
+          this.add();
+        }, 1000)
+      })
+    }
+    else{
+      this.setState({
+        time : setInterval(this.add, 1000)
+      })
+    }
+  }
+  pauseTimer(){
+    clearInterval(this.state.time);
+  }
+  resetTimer(){
+    clearInterval(this.state.time);
+    this.setState({
+      session_state : "Session",
+      time_left : (this.state.session_length).toString()+":00",
+      time : "test",
+      secs : 0,
+      mins : 0
+    })
+  }
+  add(){
+    if (0 > this.state.secs){
+      this.setState({
+        secs : 60+this.state.secs,
+        mins : this.state.mins-1
+      })
+    }
+    if (this.state.secs==0 && (this.state.mins == this.state.session_length || this.state.mins == this.state.break_length)){
+      this.setState({
+        mins : this.state.mins-1,
+        secs : 59
+      })
+    }
+    else{
+      this.setState({
+        secs : this.state.secs-1,
+        time_left : this.state.mins.toString()+":"+this.state.secs.toString()
+      })
+    }
+  }
+  breakIncrement(){
+    this.setState({
+      break_length: this.state.break_length+1
+    })
+  }
+  breakDecrement(){
+    if (parseInt(this.state.break_length) != 1){
+      this.setState({
+        break_length: this.state.break_length-1
+      })
+    }
+  }
+  sessionIncrement(){
+    this.setState({
+      session_length: this.state.session_length+1
+    })
+    this.setState({
+      time_left : (this.state.session_length+1).toString()+":00"
+    })
+  }
+  sessionDecrement(){
+    if (parseInt(this.state.session_length) != 1){
+      this.setState({
+        session_length: this.state.session_length-1
+      })
+      this.setState({
+        time_left : (this.state.session_length-1).toString()+":00"
+      })
+    }
+  }
+  render() {
+    return (
+      <div className="App">
+        <div class="card">
+          <div id="break_and_session" class="center">
+            <div id="break-label">
+              <h5>Break length</h5> <br />
+              <a onClick={() => this.breakIncrement()} class="btn waves-effect blue" id="break-increment">+</a>
+              <span id="break-length">{this.state.break_length}</span>
+              <a onClick={() => this.breakDecrement()} class="btn waves-effect blue" id="break-decrement">-</a>
+            </div>
+            <div id="session-label">
+              <h5>Session length</h5> <br />
+              <a onClick={() => this.sessionIncrement()} class="btn waves-effect blue" id="session-increment">+</a>
+              <span id="session-length">{this.state.session_length}</span>
+              <a onClick={() => this.sessionDecrement()} class="btn waves-effect blue" id="session-decrement">-</a>
+            </div>
+          </div>
+          <div id="timer-label" class="center">
+            <span id="session-state">{this.state.session_state}</span>
+            <span id="time-left">{this.state.time_left}</span>
+          </div>
+          <div id="icons" class="center">
+            <button onClick={() => this.startTimerSession()} id="start"><i class="material-icons">play_arrow</i></button>
+            <button onClick={() => this.pauseTimer()} id="pause"><i class="material-icons">pause</i></button>
+            <button onClick={() => this.resetTimer()} id="reset"><i class="material-icons">refresh</i></button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById("root")
+)

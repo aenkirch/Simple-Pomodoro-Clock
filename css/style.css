@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: #547FB2;
+  color: #547FB2;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+.App{
+  margin:9%;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+#break_and_session{
+  display: flex;
+  flex-direction: row;
+  align-content: space-between;
+  justify-content: center;
+}
+
+#break-label, #session-label, #timer-label{
+  display: flex;
+  flex-direction: column;
+  margin: 10%;
+}
+
+#timer-label, #icons{
+  margin-top: -3em;
+}
+
+#time-left{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 8em;
+  margin-bottom: -6%;
+}
+
+button{
+  background-color: white;
+}
