@@ -34,6 +34,12 @@ body {
 #time-left{
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 8em;
+  display:inline-block;
+  -webkit-transform:scale(1.2,1); /* Safari and Chrome */
+  -moz-transform:scale(1.2,1); /* Firefox */
+  -ms-transform:scale(1.2,1); /* IE 9 */
+  -o-transform:scale(1.2,1); /* Opera */
+  transform:scale(1.2,1); /* W3C */
   margin-bottom: -6%;
 }
 
